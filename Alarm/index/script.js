@@ -1,7 +1,9 @@
 const selectMenu = document.querySelectorAll('select');
 const actualTime = document.querySelector('.actual-time');
 const setAlarmBtn = document.querySelector('.btn');
-let alarmTime;
+const content = document.querySelector('.content');
+
+let alarmTime, alarmState = 'noset';
 const ringtone = new Audio('../Assets/ringtone.mp3');
 
 for(let i = 23 ; i >=0 ; i--){
@@ -27,13 +29,14 @@ setInterval( ()=> {
      s = s <10 ? '0' + s : s;
     
      actualTime.innerHTML = `${h}:${m}:${s}`;
-
-        if(alarmTime == `${h}:${m}`){
-            console.log('now');
-            ringtone.play();
-            ringtone.loop = true;
-        }
-
+     
+    
+    if(alarmTime === `${h}:${m}`){
+        console.log('now');
+        ringtone.play();
+        ringtone.loop = true;       
+    }
+    
 } , 1000);
 
 setAlarmBtn.addEventListener('click', ()=>{
@@ -41,6 +44,19 @@ setAlarmBtn.addEventListener('click', ()=>{
     if(alarmTime.includes('Hour') || alarmTime.includes('Minute')){
         return alert('You should set the right Time');
     }
-    
+    checkState(alarmState);
 })
 
+function checkState(state){
+    if(state == 'noset'){
+        content.classList.add('disable');
+        setAlarmBtn.innerText = 'Clear';
+        alarmState = 'set';
+    } else {
+        content.classList.remove('disable');
+        alarmTime = ' ';
+        ringtone.pause();
+        alarmState = 'noset';
+        setAlarmBtn.innerText = 'set';
+    }
+}
